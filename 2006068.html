@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<title>2024년 제1회 전기기능사 CBT</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow:hidden;}
+body{background:#0d1117;color:#e6edf3;font-family:-apple-system,BlinkMacSystemFont,'Noto Sans KR','Apple SD Gothic Neo',sans-serif;font-size:16px;}
+
+/* HEADER */
+.hdr{background:#161b22;border-bottom:1px solid #30363d;padding:10px 16px;display:flex;align-items:center;gap:10px;position:fixed;top:0;left:0;right:0;z-index:100;}
+.hdr-info{flex:1;min-width:0;}
+.hdr-title{font-size:12px;font-weight:900;color:#58a6ff;letter-spacing:.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.hdr-sub{font-size:10px;color:#8b949e;margin-top:1px;}
+.prog-bar{height:3px;background:#30363d;border-radius:2px;overflow:hidden;margin-top:6px;}
+.prog-fill{height:100%;background:linear-gradient(90deg,#58a6ff,#a371f7);border-radius:2px;transition:width .3s;}
+.score-chip{background:#21262d;border:1px solid #30363d;border-radius:16px;padding:4px 10px;font-size:12px;font-weight:700;color:#58a6ff;font-variant-numeric:tabular-nums;white-space:nowrap;}
+
+/* MAIN */
+.main{position:fixed;top:68px;left:0;right:0;bottom:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px;}
+
+/* CARD */
+.q-card{background:#161b22;border:1px solid #30363d;border-radius:14px;overflow:hidden;animation:up .2s ease;margin-bottom:10px;}
+@keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.q-tag{background:linear-gradient(90deg,#58a6ff,#a371f7);padding:7px 14px;font-size:10px;font-weight:700;letter-spacing:2px;color:#fff;}
+.q-body{padding:14px;}
+.q-num{font-size:10px;color:#8b949e;font-weight:700;margin-bottom:6px;letter-spacing:1px;}
+.q-text{font-size:15px;line-height:1.75;font-weight:500;margin-bottom:12px;word-break:keep-all;}
+.q-img{width:100%;max-width:340px;border-radius:8px;display:block;margin:0 auto 12px;border:1px solid #30363d;}
+
+/* OPTIONS */
+.opts{display:flex;flex-direction:column;gap:8px;}
+.opt{display:flex;align-items:flex-start;gap:10px;background:#21262d;border:1px solid #30363d;border-radius:11px;padding:11px 13px;cursor:pointer;transition:all .15s;color:#e6edf3;font-size:14px;line-height:1.5;width:100%;text-align:left;-webkit-appearance:none;appearance:none;}
+.opt:active{transform:scale(.98);}
+.opt-lbl{min-width:24px;height:24px;border-radius:50%;background:#30363d;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.opt.ok{border-color:#3fb950;background:rgba(63,185,80,.1);}
+.opt.ok .opt-lbl{background:#3fb950;color:#0d1117;}
+.opt.ng{border-color:#f85149;background:rgba(248,81,73,.1);}
+.opt.ng .opt-lbl{background:#f85149;color:#fff;}
+
+/* EXPLANATION */
+.exp{display:none;margin-top:12px;border-radius:10px;overflow:hidden;border:1px solid #30363d;}
+.exp.show{display:block;animation:fi .25s ease;}
+@keyframes fi{from{opacity:0}to{opacity:1}}
+.exp-hdr{background:#21262d;padding:8px 13px;font-size:10px;font-weight:700;letter-spacing:2px;color:#58a6ff;display:flex;align-items:center;gap:6px;}
+.exp-dot{width:6px;height:6px;border-radius:50%;background:#58a6ff;}
+.exp-body{padding:11px 13px;background:#0d1117;font-size:13px;line-height:1.8;color:#8b949e;white-space:pre-wrap;}
+.ld{display:flex;gap:4px;align-items:center;}
+.ld span{width:5px;height:5px;border-radius:50%;background:#58a6ff;animation:bk 1.2s infinite;}
+.ld span:nth-child(2){animation-delay:.2s;}
+.ld span:nth-child(3){animation-delay:.4s;}
+@keyframes bk{0%,80%,100%{transform:scale(.5);opacity:.4}40%{transform:scale(1);opacity:1}}
+
+/* NAV */
+.nav{display:flex;gap:8px;margin-top:10px;}
+.nav-btn{flex:1;padding:13px;border-radius:11px;border:none;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;-webkit-appearance:none;}
+.nav-btn.prev{background:#21262d;color:#8b949e;border:1px solid #30363d;}
+.nav-btn.next{background:linear-gradient(135deg,#58a6ff,#a371f7);color:#0d1117;}
+.nav-btn:disabled{opacity:.3;pointer-events:none;}
+
+/* DOTS */
+.dots{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px;padding-bottom:20px;}
+.dot{width:28px;height:28px;border-radius:6px;background:#21262d;border:1px solid #30363d;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;cursor:pointer;color:#8b949e;}
+.dot.cur{background:#58a6ff;border-color:#58a6ff;color:#0d1117;}
+.dot.c-ok{background:rgba(63,185,80,.15);border-color:#3fb950;color:#3fb950;}
+.dot.c-ng{background:rgba(248,81,73,.15);border-color:#f85149;color:#f85149;}
+
+/* RESULT */
+.result{text-align:center;padding:24px 16px;}
+.ring{width:100px;height:100px;margin:0 auto 16px;position:relative;display:flex;align-items:center;justify-content:center;}
+.ring svg{position:absolute;top:0;left:0;transform:rotate(-90deg);}
+.ring-pct{font-size:26px;font-weight:900;}
+.res-title{font-size:20px;font-weight:900;margin-bottom:6px;}
+.res-sub{font-size:13px;color:#8b949e;margin-bottom:24px;}
+.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:24px;}
+.stat{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:12px 8px;text-align:center;}
+.stat-v{font-size:20px;font-weight:900;}
+.stat-l{font-size:10px;color:#8b949e;margin-top:2px;}
+.retry{width:100%;padding:14px;border-radius:11px;border:none;background:linear-gradient(135deg,#58a6ff,#a371f7);color:#0d1117;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;}
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+</head>
+<body>
+<div class="hdr">
+  <div class="hdr-info">
+    <div class="hdr-title">2024년 제1회 전기기능사 CBT</div>
+    <div class="prog-bar"><div class="prog-fill" id="pf" style="width:0%"></div></div>
+  </div>
+  <div class="score-chip" id="sc">0점</div>
+</div>
+<div class="main" id="main"></div>
+
+<script>
+const QS=[{"id":1,"text":"투과율이 각각 $\\mu_1, \\mu_2$인 두 자성체의 경계면에 대한 입사각과 굴절각을 각각 $\\theta_1, \\theta_2$라 할 때 성립되는 관계식은?","opts":["① $\\frac{\\tan\\theta_1}{\\tan\\theta_2} = \\frac{\\mu_1}{\\mu_2}$","① $\\frac{\\tan\\theta_1}{\\tan\\theta_2} = \\frac{\\mu_1}{\\mu_2}$","① $\\frac{\\tan\\theta_1}{\\tan\\theta_2} = \\frac{\\mu_1}{\\mu_2}$","① $\\frac{\\tan\\theta_1}{\\tan\\theta_2} = \\frac{\\mu_1}{\\mu_2}$"],"answer":1,"exp":"","img":null}];
+const title="2024년 제1회 전기기능사 CBT";
+let cur=0,score=0,ans=new Array(QS.length).fill(null),cache={};
+
+window.onerror=function(msg,src,line,col,err){
+  var box=document.getElementById('main');
+  if(box){
+    box.innerHTML='<div style="padding:20px;color:#f85149;font-size:13px;line-height:1.7;white-space:pre-wrap;word-break:break-all;">'+
+      '⚠️ 오류가 발생했습니다. 아래 내용을 캡처해서 알려주세요:\n\n'+
+      String(msg)+'\n(줄 '+line+', 칸 '+col+')\n\n'+
+      'QS문제수: '+(typeof QS!=='undefined'?QS.length:'undefined')+'\n'+
+      'UA: '+navigator.userAgent+
+      '</div>';
+  }
+  return false;
+};
+
+async function getExp(q){
+  if(cache[q.id]) return cache[q.id];
+  if(!q.exp) return '해설이 없습니다.';
+  cache[q.id]=q.exp; return q.exp;
+}
+
+function mkDots(){
+  return '<div class="dots">'+QS.map((q,i)=>{
+    let c='dot'+(i===cur?' cur':'')+(ans[i]!==null?(ans[i].ok?' c-ok':' c-ng'):'');
+    return '<div class="'+c+'" onclick="jump('+i+')">'+(i+1)+'</div>';
+  }).join('')+'</div>';
+}
+
+function render(){
+  const q=QS[cur],a=ans[cur],done=a!==null;
+  const lbls=['①','②','③','④'];
+  const imgH=q.img?'<img src="'+q.img+'" class="q-img">':'';
+  const optsH=q.opts.map((o,i)=>{
+    let c='opt'+(done?i===q.answer?' ok':i===a.chosen?' ng':'':'');
+    return '<button class="'+c+'"'+(done?' disabled':'')+' onclick="choose('+i+')"><span class="opt-lbl">'+lbls[i]+'</span><span>'+o+'</span></button>';
+  }).join('');
+  const expShow=done?' show':'';
+  const cached=cache[q.id];
+  const expH='<div class="exp'+expShow+'"><div class="exp-hdr"><div class="exp-dot"></div>해설</div><div class="exp-body" id="eb">'+(done?(cached||q.exp||'<div class="ld"><span></span><span></span><span></span></div>'):'')+'</div></div>';
+  const isLast=cur===QS.length-1;
+  document.getElementById('main').innerHTML=
+    '<div class="q-card"><div class="q-tag">'+title+' · '+( cur+1)+'/'+QS.length+'</div><div class="q-body">'+
+    '<div class="q-num">Q'+String(q.id).padStart(2,'0')+'</div>'+
+    '<div class="q-text">'+q.text+'</div>'+imgH+
+    '<div class="opts">'+optsH+'</div>'+expH+'</div></div>'+
+    '<div class="nav"><button class="nav-btn prev" onclick="go(-1)"'+(cur===0?' disabled':'')+'>← 이전</button>'+
+    (isLast?'<button class="nav-btn next" onclick="result()">결과 보기 🎯</button>':'<button class="nav-btn next" onclick="go(1)">다음 →</button>')+
+    '</div>'+mkDots();
+  updateHdr();
+  renderMath(document.getElementById('main'));
+  if(done&&!cache[q.id]) getExp(q).then(t=>{const el=document.getElementById('eb');if(el){el.textContent=t;renderMath(el);}});
+}
+
+function renderMath(el){
+  if(el&&window.renderMathInElement){
+    renderMathInElement(el,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false});
+  }
+}
+
+function choose(i){
+  if(ans[cur]!==null) return;
+  const ok=i===QS[cur].answer; if(ok) score++;
+  ans[cur]={chosen:i,ok}; render();
+}
+function go(d){cur=Math.max(0,Math.min(QS.length-1,cur+d));render();}
+function jump(i){cur=i;render();}
+function result(){
+  const total=QS.length,done=ans.filter(a=>a!==null).length;
+  const pct=Math.round(score/total*100),pass=pct>=60;
+  const C=2*Math.PI*44,off=C-(pct/100)*C;
+  document.getElementById('main').innerHTML=
+    '<div class="result">'+
+    '<div class="ring"><svg width="100" height="100" viewBox="0 0 100 100">'+
+    '<circle cx="50" cy="50" r="44" fill="none" stroke="#30363d" stroke-width="7"/>'+
+    '<circle cx="50" cy="50" r="44" fill="none" stroke="'+(pass?'#3fb950':'#f85149')+'" stroke-width="7" stroke-dasharray="'+C+'" stroke-dashoffset="'+off+'" stroke-linecap="round"/></svg>'+
+    '<div class="ring-pct" style="color:'+(pass?'#3fb950':'#f85149')+'">'+pct+'%</div></div>'+
+    '<div class="res-title">'+(pass?'🎉 합격!':'😥 불합격')+'</div>'+
+    '<div class="res-sub">'+(pass?'축하합니다! 60점 이상 달성':'60점 이상이면 합격입니다')+'</div>'+
+    '<div class="stats">'+
+    '<div class="stat"><div class="stat-v" style="color:#58a6ff">'+done+'</div><div class="stat-l">풀은 문제</div></div>'+
+    '<div class="stat"><div class="stat-v" style="color:#3fb950">'+score+'</div><div class="stat-l">정답</div></div>'+
+    '<div class="stat"><div class="stat-v" style="color:#f85149">'+(done-score)+'</div><div class="stat-l">오답</div></div>'+
+    '</div><button class="retry" onclick="restart()">🔄 다시 풀기</button></div>';
+  document.getElementById('pf').style.width='100%';
+  document.getElementById('sc').textContent=score+'점';
+}
+function restart(){cur=0;score=0;ans=new Array(QS.length).fill(null);cache={};render();}
+function updateHdr(){
+  const done=ans.filter(a=>a!==null).length;
+  document.getElementById('pf').style.width=(done/QS.length*100)+'%';
+  document.getElementById('sc').textContent=score+'점';
+}
+if(document.readyState==='complete'){render();}else{window.addEventListener('load',render);}
+</script>
+</body>
+</html>
