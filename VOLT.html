@@ -49,7 +49,7 @@ summary{cursor:pointer;color:var(--acc);font-size:14px}
 .dock .in{max-width:820px;margin:0 auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .dock .tot{margin-left:auto;font-weight:700}
 @media(max-width:520px){.pair{grid-template-columns:1fr}}
-</style></head><body><div class="wrap"><div id="app"></div></div><div id="dock" class="dock"></div><script>var DATA={"problems":[{"id":"wktkfr3","title":"전선 종류와 명칭을 기록하시오.","instr":"다음 전선의 약호에 해당하는 명칭을 보기에서 고르시오.","note":"문제에서 제시하는 약호의 정확한 명칭을 보기에서 고른 후, 채점하시면 정답확인이 가능해요","rows":[{"k":"ASCR","v":"강심 알루미늄 연선"},{"k":"DV전선","v":"인입용 비닐 절연전선"},{"k":"FL전선","v":"형광방전등용 비닐전선"},{"k":"NR전선","v":"450/750[V] 일반용 단심 비닐 절연전선"},{"k":"OC전선","v":"옥외용 가교 폴리에틸렌 절연전선"},{"k":"OE전선","v":"옥외용 폴리에틸렌 절연전선"},{"k":"OW전선","v":"옥외용 비닐절연전선"},{"k":"HFIX","v":"450/750[V] 저독성 난연 가교 폴리올레핀 절연전선"},{"k":"HFIO","v":"450/750[V] 저독성 난연 폴리올레핀 절연전선"}],"fakes":["강심 알루미늄 비닐케이블","450/750[V] 동심 중성선 절연전선","비닐시스 비닐케이블","비닐절연 비닐캡타이어 케이블","내열용 비닐절연전선","가교 폴리에틸렌 절연 비닐시스 케이블"]}]};
+</style></head><body><div class="wrap"><div id="app"></div></div><div id="dock" class="dock"></div><script>var DATA={"problems":[{"id":"srwpdwv","title":"전선 종류와 명칭을 기록하시오.","instr":"다음 전선의 약호에 해당하는 명칭을 보기에서 고르시오.","note":"보기에는 이 문제에 없는 명칭도 섞여 있음","rows":[{"k":"ASCR","v":"강심 알루미늄 연선"},{"k":"DV전선","v":"인입용 비닐 절연전선"},{"k":"FL전선","v":"형광방전등용 비닐전선"},{"k":"NR전선","v":"450/750[V] 일반용 단심 비닐 절연전선"},{"k":"OC전선","v":"옥외용 가교 폴리에틸렌 절연전선"},{"k":"OE전선","v":"옥외용 폴리에틸렌 절연전선"},{"k":"OW전선","v":"옥외용 비닐절연전선"},{"k":"HFIX","v":"450/750[V] 저독성 난연 가교 폴리올레핀 절연전선"},{"k":"HFIO","v":"450/750[V] 저독성 난연 폴리올레핀 절연전선"}],"fakes":["인입용 가교폴리에틸렌전선","강심 알루미늄 비닐케이블","450/750[V] 동심 중성선 절연전선","비닐시스 비닐케이블","비닐절연 비닐캡타이어 케이블","내열용 비닐절연전선","가교 폴리에틸렌 절연 비닐시스 케이블"]}]};
 var P=DATA.problems,ans={},graded=false,showKey=false,opts={};
 var app=document.getElementById('app'),dock=document.getElementById('dock');
 function h(t,a,c){a=a||{};var e=document.createElement(t);for(var k in a){var v=a[k];if(k==='class')e.className=v;else if(k.slice(0,2)==='on')e.addEventListener(k.slice(2),v);else if(v!==false&&v!=null)e.setAttribute(k,v)}
@@ -67,13 +67,13 @@ function render(){app.innerHTML='';
     var sel=h('select',{'aria-label':r.k+' 명칭',onchange:function(e){ans[id]=e.target.value}},h('option',{value:''},'선택'),opts[p.id].map(function(o){return h('option',{value:o},o)}));
     sel.value=ans[id]||'';var ok=graded&&ans[id]===r.v;
     return h('div',{class:'pair'+(graded?(ok?' ok':' ng'):'')},h('div',{class:'k'},r.k),
-     h('div',{class:'r'},sel,graded&&h('span',{class:'mark'},ok?'정답':'오답'),(showKey||(graded&&!ok))&&h('span',{class:'key'},'정답: '+r.v)))}),
+     h('div',{class:'r'},sel,graded&&h('span',{class:'mark'},ok?'정답':'오답'),showKey&&h('span',{class:'key'},'정답: '+r.v)))}),
    rs&&h('div',{class:'score'},'점수 '+rs[0]+' / '+rs[1])))});
  dock.innerHTML='';var tot='';
  if(graded){var a=0,b=0;P.forEach(function(p){var r=grade(p);a+=r[0];b+=r[1]});tot='합계 '+a+' / '+b}
  dock.append(h('div',{class:'in'},
   h('button',{class:'pri',onclick:function(){graded=true;render()}},'채점'),
   graded&&h('button',{onclick:function(){showKey=!showKey;render()}},showKey?'정답지 숨기기':'정답지 보기'),
-  h('button',{onclick:start},'다시 풀기'),h('span',{class:'tot'},tot)))}
+  h('span',{class:'tot'},tot),h('button',{onclick:start},'다시 풀기')))}
 start();
 </script></body></html>
