@@ -73,7 +73,7 @@ function render(){app.innerHTML='';
  if(graded){var a=0,b=0;P.forEach(function(p){var r=grade(p);a+=r[0];b+=r[1]});tot='합계 '+a+' / '+b}
  dock.append(h('div',{class:'in'},
   h('button',{class:'pri',onclick:function(){graded=true;render()}},'채점'),
-  h('button',{onclick:function(){showKey=!showKey;render()}},showKey?'정답지 숨기기':'정답지 보기'),
+  graded&&h('button',{onclick:function(){showKey=!showKey;render()}},showKey?'정답지 숨기기':'정답지 보기'),
   h('button',{onclick:start},'다시 풀기'),h('span',{class:'tot'},tot)))}
 start();
 </script></body></html>
