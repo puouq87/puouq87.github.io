@@ -6,24 +6,23 @@
 <title>CBT 허브</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{background:#0d1117;color:#e6edf3;font-family:-apple-system,BlinkMacSystemFont,'Noto Sans KR','Apple SD Gothic Neo',sans-serif;font-size:15px;padding:14px 14px 60px}
+body{background:#0d1117;color:#e6edf3;font-family:-apple-system,BlinkMacSystemFont,'Noto Sans KR','Apple SD Gothic Neo',sans-serif;font-size:15px;padding:14px 14px 60px;max-width:640px;margin:0 auto}
 .top{display:flex;align-items:center;gap:8px;margin-bottom:4px}
 h1{flex:1;font-size:19px;font-weight:900;color:#58a6ff}
 .sub{font-size:11px;color:#8b949e;margin-bottom:14px}
 button{font-family:inherit;cursor:pointer}
 .b{background:#21262d;color:#e6edf3;border:1px solid #30363d;border-radius:9px;padding:7px 11px;font-size:12px;font-weight:700}
-.b.on{background:#58a6ff;color:#0d1117;border-color:#58a6ff}
-.b.red{color:#f85149}
-.b.sm{padding:3px 8px;font-size:11px}
+.b.red{color:#f85149}.b.on{background:#58a6ff;color:#0d1117;border-color:#58a6ff}
 .grp{margin-bottom:18px}
-.gh{display:flex;align-items:center;gap:5px;border-bottom:2px solid #58a6ff;padding-bottom:6px;margin-bottom:8px}
-.gh h2{flex:1;font-size:15px;font-weight:800}
-.lk{background:#161b22;border:1px solid #30363d;border-radius:11px;padding:11px 13px;margin-bottom:7px}
+.gh{border-bottom:2px solid #58a6ff;padding-bottom:6px;margin-bottom:8px}
+.gh h2{font-size:15px;font-weight:800}
+.lk{background:#161b22;border:1px solid #30363d;border-radius:11px;padding:11px 13px;margin-bottom:7px;display:flex;gap:10px;align-items:flex-start}
+.lk .m{flex:1;min-width:0}
 .lk a{color:#e6edf3;font-weight:700;text-decoration:none;display:block;word-break:keep-all}
 .st{font-size:12px;color:#8b949e;margin-top:4px;line-height:1.6}
 .st b{color:#3fb950}.st .w{color:#f85149}
-.row{display:flex;gap:5px;margin-top:8px;flex-wrap:wrap}
-.empty{white-space:pre-line;color:#8b949e;font-size:13px;line-height:1.8;padding:20px 0;text-align:center}
+.rs{background:none;border:1px solid #30363d;color:#8b949e;border-radius:8px;padding:3px 8px;font-size:11px}
+.empty{color:#8b949e;font-size:13px;padding:20px 0;text-align:center}
 .ov{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:flex-end;justify-content:center;z-index:9}
 .sheet{background:#161b22;border:1px solid #30363d;border-radius:16px 16px 0 0;width:100%;max-width:520px;padding:16px;max-height:85vh;overflow:auto}
 .sheet h3{font-size:15px;margin-bottom:10px}
@@ -31,107 +30,81 @@ button{font-family:inherit;cursor:pointer}
 textarea{width:100%;height:150px;background:#0d1117;color:#e6edf3;border:1px solid #30363d;border-radius:9px;padding:9px;font-size:12px;word-break:break-all}
 .note{font-size:12px;color:#8b949e;margin:6px 0 10px;line-height:1.6}
 </style>
-<script src="tracker.js"></script>
 </head>
 <body>
-<div class="top"><h1>CBT 허브</h1><button class="b" id="bEdit">편집</button><button class="b" id="bMenu">메뉴</button></div>
+<div class="top"><h1 id="ttl"></h1><button class="b" id="bMenu">메뉴</button></div>
 <div class="sub" id="sub"></div>
 <div id="app"></div>
-
 <script>
-var LK='cbtHub.list.v1', BK='cbtHub.lastBackup', T=window.CBTTracker, edit=false;
-var DEF={g:[{n:'2024년도',l:[{t:'24년 1회 산업기사 01~50',u:'24_1_01to50.html'}]}]};
-var L=loadList();
-
-function loadList(){try{var d=JSON.parse(localStorage.getItem(LK)||'null');if(d&&d.g)return d}catch(e){}return JSON.parse(JSON.stringify(DEF))}
-function saveList(){try{localStorage.setItem(LK,JSON.stringify(L))}catch(e){alert('저장하지 못했어요. 브라우저 저장 공간을 확인해 주세요.')}render()}
-function safeUrl(u){u=String(u||'').trim();if(!u)return'';if(/^[a-z][a-z0-9+.-]*:/i.test(u))return/^https?:/i.test(u)?u:'';return u}
-function cleanList(d){
-  if(!d||!Array.isArray(d.g))return null;
-  return{g:d.g.map(function(g){return{n:String(g.n||'').slice(0,60),l:(Array.isArray(g.l)?g.l:[]).map(function(k){return{t:String(k.t||'').slice(0,100),u:safeUrl(k.u)}}).filter(function(k){return k.u})}})};
+const HUB={"title":"CBT 허브","groups":[{"name":"23년도 문제","links":[{"t":"23년 1회 001 - 050","u":"https://puouq87.github.io/23_1_01to50.html"},{"t":"23년 1회 051 - 100","u":"https://puouq87.github.io/23_1_51to100.html"},{"t":"23년 2회 001 - 050","u":"https://puouq87.github.io/23_2_01to50.html"},{"t":"23년 2회 051 - 100","u":"https://puouq87.github.io/23_2_51to100.html"},{"t":"23년 3회 001 - 050","u":"https://puouq87.github.io/23_3_01to50.html"},{"t":"23년 3회 051 - 100","u":"https://puouq87.github.io/23_3_51to100.html"}]},{"name":"24년도 문제","links":[{"t":"24년 1회 001 - 050","u":"https://puouq87.github.io/24_1_01to50.html"},{"t":"24년 1회 051 - 100","u":"https://puouq87.github.io/24_1_51to100.html"},{"t":"24년 2회 001 - 050","u":"https://puouq87.github.io/24_2_01to50.html"},{"t":"24년 2회 051 - 100","u":"https://puouq87.github.io/24_2_51to100.html"},{"t":"24년 3회 001 - 050","u":"https://puouq87.github.io/24_3_01to50.html"},{"t":"24년 3회 051 - 100","u":"https://puouq87.github.io/24_3_51to100.html"}]},{"name":"25년도 문제","links":[{"t":"25년 1회 001 - 050","u":"https://puouq87.github.io/25_1_01to50.html"},{"t":"25년 1회 051 - 100","u":"https://puouq87.github.io/25_1_51to100.html"},{"t":"25년 2회 001 - 050","u":"https://puouq87.github.io/25_2_01to50.html"},{"t":"25년 2회 051 - 100","u":"https://puouq87.github.io/25_2_50to100.html"},{"t":"25년 3회 001 - 050","u":"https://puouq87.github.io/25_3_01to50.html"},{"t":"25년 3회 051 - 100","u":"https://puouq87.github.io/25_3_51to100.html"}]},{"name":"26년도 문제","links":[{"t":"26년 1회 001 - 050","u":"https://puouq87.github.io/26_1_1to50.html"},{"t":"26년 1회 051 - 100","u":"https://puouq87.github.io/26_1_51to100.html"},{"t":"26년 2회 001 - 050","u":"https://puouq87.github.io/26_2_1to50.html"},{"t":"26년 2회 051 - 100","u":"https://puouq87.github.io/26_2_51to100.html"},{"t":"26년 3회 001 - 050","u":"https://puouq87.github.io/26_3_01to50.html"},{"t":"26년 3회 051 - 100","u":"https://puouq87.github.io/26_3_51to100.html"}]},{"name":"파이널","links":[{"t":"~p23","u":"https://puouq87.github.io/final_p23.html"},{"t":"p26~p39","u":"https://puouq87.github.io/final_p26~p39.html"},{"t":"p40~p52","u":"https://puouq87.github.io/final_p40~p52.html"},{"t":"p54~p68","u":"https://puouq87.github.io/final_p54~p68.html"},{"t":"p69~p82","u":"https://puouq87.github.io/final_p69~p82.html"},{"t":"p83~p100","u":"https://puouq87.github.io/final_p83~p100.html"},{"t":"p101~p114","u":"https://puouq87.github.io/final_p101~p114.html"},{"t":"p115~p130","u":"https://puouq87.github.io/final_p115~p130.html"},{"t":"p131~p144","u":"https://puouq87.github.io/final_p131~p144.html"},{"t":"p149~p161","u":"https://puouq87.github.io/final_p149~p161.html"},{"t":"p162~p174","u":"https://puouq87.github.io/final_p162~p174.html"},{"t":"p175~p191","u":"https://puouq87.github.io/final_p175~p191.htm"},{"t":"p193~p205","u":"https://puouq87.github.io/final_p193~p205.html"},{"t":"p207~p220","u":"https://puouq87.github.io/final_p207~p220.html"},{"t":"p221~p237","u":"https://puouq87.github.io/final_p221~p237.htm"},{"t":"p238~p255","u":"https://puouq87.github.io/final_p238~p255.html"},{"t":"p256~p267","u":"https://puouq87.github.io/final_p256~p267.html"},{"t":"p273~p284","u":"https://puouq87.github.io/final_p273~p284.html"},{"t":"p285~p296","u":"https://puouq87.github.io/final_p285~p296.html"}]}]};
+const K='cbtHub.records.v1',BK='cbtHub.lastBackup';
+function load(){try{const d=JSON.parse(localStorage.getItem(K)||'null');if(d&&d.exams)return d}catch(e){}return{exams:{}}}
+function save(d){try{localStorage.setItem(K,JSON.stringify(d));return true}catch(e){return false}}
+function idOf(u){try{const p=decodeURIComponent(new URL(u,location.href).pathname).split('/').pop(),i=p.lastIndexOf('.');return i>0?p.slice(0,i):p}catch(e){return''}}
+function enc(o){return'CBTREC1:'+btoa(unescape(encodeURIComponent(JSON.stringify(o))))}
+function dec(t){t=String(t||'').replace(/\s+/g,'');if(t.indexOf('CBTREC1:')!==0)return null;try{return JSON.parse(decodeURIComponent(escape(atob(t.slice(8)))))}catch(e){return null}}
+function clean(d){
+  if(!d||typeof d.exams!=='object')return null;const o={exams:{}};
+  Object.keys(d.exams).forEach(function(id){const s=d.exams[id]||{},e={attempts:s.attempts|0,total:s.total|0,last:+s.last||0,lastScore:s.lastScore|0,best:s.best|0,wrong:{}};
+    Object.keys(s.wrong||{}).forEach(function(q){const n=s.wrong[q]|0;if(n>0)e.wrong[q]=n});o.exams[id]=e});
+  return o;
 }
-function h(t,a,c){var e=document.createElement(t);for(var k in(a||{})){if(k==='on')for(var v in a.on)e.addEventListener(v,a.on[v]);else if(k==='cls')e.className=a[k];else e.setAttribute(k,a[k])}[].concat(c==null?[]:c).forEach(function(x){e.append(x)});return e}
-function move(arr,i,d){var j=i+d;if(j<0||j>=arr.length)return;var x=arr.splice(i,1)[0];arr.splice(j,0,x);saveList()}
-function btn(txt,fn,cls){return h('button',{cls:'b sm'+(cls?' '+cls:''),on:{click:fn}},txt)}
+function h(t,a,c){const e=document.createElement(t);for(const k in(a||{})){if(k==='on')for(const v in a.on)e.addEventListener(v,a.on[v]);else if(k==='cls')e.className=a[k];else e.setAttribute(k,a[k])}[].concat(c==null?[]:c).forEach(function(x){e.append(x)});return e}
+function safeUrl(u){u=String(u||'').trim();if(/^[a-z][a-z0-9+.-]*:/i.test(u))return/^https?:/i.test(u)?u:'';return u}
 
 function stats(u){
-  var e=T.load().exams[T.idOf(u)];
+  const e=load().exams[idOf(u)];
   if(!e||!e.attempts)return h('div',{cls:'st'},'아직 응시 기록이 없어요');
-  var ws=Object.keys(e.wrong).map(function(q){return[q,e.wrong[q]]}).sort(function(a,b){return b[1]-a[1]||a[0]-b[0]});
-  var box=h('div',{cls:'st'},[h('b',0,'응시 '+e.attempts+'회'),' · 최근 '+e.lastScore+'점 · 최고 '+e.best+'점']);
-  if(ws.length){box.append(h('br'),h('span',{cls:'w'},'자주 틀린 문항 '),ws.slice(0,6).map(function(x){return'Q'+String(x[0]).padStart(2,'0')+'×'+x[1]}).join('  '))}
+  const ws=Object.keys(e.wrong).map(function(q){return[q,e.wrong[q]]}).sort(function(a,b){return b[1]-a[1]||a[0]-b[0]});
+  const box=h('div',{cls:'st'},[h('b',0,'응시 '+e.attempts+'회'),' · 최근 '+e.lastScore+'점 · 최고 '+e.best+'점']);
+  if(ws.length)box.append(h('br'),h('span',{cls:'w'},'자주 틀린 문항(고유번호) '),ws.slice(0,6).map(function(x){return'#'+x[0]+'×'+x[1]}).join('  '));
   return box;
 }
-
 function render(){
-  var app=document.getElementById('app');app.innerHTML='';
-  document.getElementById('bEdit').className='b'+(edit?' on':'');
-  document.getElementById('bEdit').textContent=edit?'편집 완료':'편집';
-  var lb=+localStorage.getItem(BK),days=lb?Math.floor((Date.now()-lb)/864e5):-1;
+  document.getElementById('ttl').textContent=HUB.title||'CBT 허브';document.title=HUB.title||'CBT 허브';
+  const lb=+localStorage.getItem(BK),days=lb?Math.floor((Date.now()-lb)/864e5):-1;
   document.getElementById('sub').textContent=days<0?'기록 백업을 아직 하지 않았어요 (메뉴 → 기록 백업)':'마지막 기록 백업: '+(days?days+'일 전':'오늘');
-  if(!L.g.length)app.append(h('div',{cls:'empty'},'대분류가 없어요.\n오른쪽 위 편집 → 대분류 추가를 눌러 시작하세요.'));
-  L.g.forEach(function(g,gi){
-    var head=h('div',{cls:'gh'},[h('h2',0,g.n||'(이름 없음)')]);
-    if(edit)head.append(btn('▲',function(){move(L.g,gi,-1)}),btn('▼',function(){move(L.g,gi,1)}),
-      btn('이름',function(){var n=prompt('대분류 이름',g.n);if(n!=null&&n.trim()){g.n=n.trim();saveList()}}),
-      btn('삭제',function(){if(confirm('"'+g.n+'" 대분류와 안의 링크를 모두 지울까요?\n(응시 기록은 남아요)')){L.g.splice(gi,1);saveList()}},'red'));
-    var grp=h('div',{cls:'grp'},[head]);
-    g.l.forEach(function(k,ki){
-      var card=h('div',{cls:'lk'},[h('a',{href:k.u},k.t||k.u),stats(k.u)]);
-      if(edit)card.append(h('div',{cls:'row'},[
-        btn('▲',function(){move(g.l,ki,-1)}),btn('▼',function(){move(g.l,ki,1)}),
-        btn('수정',function(){var t=prompt('제목',k.t);if(t==null)return;var u=prompt('주소(파일명 또는 전체 주소)',k.u);if(u==null)return;u=safeUrl(u);if(!u){alert('주소는 http(s)나 파일명이어야 해요.');return}k.t=t.trim();k.u=u;saveList()}),
-        btn('기록 초기화',function(){if(confirm('"'+(k.t||k.u)+'"의 응시·오답 기록을 지울까요?')){T.reset(T.idOf(k.u));render()}},'red'),
-        btn('삭제',function(){if(confirm('이 링크를 목록에서 지울까요?')){g.l.splice(ki,1);saveList()}},'red')]));
-      grp.append(card);
+  const app=document.getElementById('app');app.innerHTML='';
+  if(!HUB.groups.length)app.append(h('div',{cls:'empty'},'등록된 시험이 없어요'));
+  HUB.groups.forEach(function(g){
+    const grp=h('div',{cls:'grp'},[h('div',{cls:'gh'},[h('h2',0,g.name)])]);
+    g.links.forEach(function(k){
+      const u=safeUrl(k.u);if(!u)return;
+      grp.append(h('div',{cls:'lk'},[h('div',{cls:'m'},[h('a',{href:u},k.t||idOf(u)),stats(u)]),
+        h('button',{cls:'rs',on:{click:function(){if(confirm('"'+(k.t||idOf(u))+'"의 응시·오답 기록을 지울까요?')){const d=load();delete d.exams[idOf(u)];save(d);render()}}}},'초기화')]));
     });
-    if(edit)grp.append(btn('+ 링크 추가',function(){var t=prompt('제목 (예: 24년 1회 산업기사 01~50)');if(t==null)return;var u=safeUrl(prompt('주소 (파일명 또는 전체 주소)'));if(!u){alert('주소는 http(s)나 파일명이어야 해요.');return}g.l.push({t:t.trim(),u:u});saveList()}));
     app.append(grp);
   });
-  if(edit)app.append(btn('+ 대분류 추가',function(){var n=prompt('대분류 이름 (예: 2024년도, 전기산업기사 문제지)');if(n&&n.trim()){L.g.push({n:n.trim(),l:[]});saveList()}}));
 }
-
-// ---- 시트/텍스트 패널 ----
 function sheet(title,nodes){
-  var ov=h('div',{cls:'ov',on:{click:function(e){if(e.target===ov)ov.remove()}}},[h('div',{cls:'sheet'},[h('h3',0,title)].concat(nodes,[h('button',{cls:'b',on:{click:function(){ov.remove()}}},'닫기')]))]);
+  const ov=h('div',{cls:'ov',on:{click:function(e){if(e.target===ov)ov.remove()}}},[h('div',{cls:'sheet'},[h('h3',0,title)].concat(nodes,[h('button',{cls:'b',on:{click:function(){ov.remove()}}},'닫기')]))]);
   document.body.append(ov);return ov;
 }
-function textOut(title,text,done){
-  var ta=h('textarea',{readonly:'readonly'});ta.value=text;
-  var note=h('div',{cls:'note'},'아래 텍스트를 복사해서 카톡 "나와의 채팅"에 보관하세요.');
-  var ov=sheet(title,[note,ta]);
-  ta.focus();ta.select();
-  try{if(navigator.clipboard)navigator.clipboard.writeText(text).then(function(){note.textContent='클립보드에 복사했어요. 카톡 "나와의 채팅"에 붙여넣어 보관하세요.'},function(){})}catch(e){}
-  try{if(document.execCommand('copy'))note.textContent='클립보드에 복사했어요. 카톡 "나와의 채팅"에 붙여넣어 보관하세요.'}catch(e){}
-  if(done)done();return ov;
+function textOut(text){
+  const ta=h('textarea',{readonly:'readonly'});ta.value=text;
+  const note=h('div',{cls:'note'},'아래 텍스트를 복사해서 카톡 "나와의 채팅"에 보관하세요.');
+  sheet('기록 백업',[note,ta]);ta.focus();ta.select();
+  const ok=function(){note.textContent='클립보드에 복사했어요. 카톡 "나와의 채팅"에 붙여넣어 보관하세요.'};
+  try{if(navigator.clipboard)navigator.clipboard.writeText(text).then(ok,function(){})}catch(e){}
+  try{if(document.execCommand('copy'))ok()}catch(e){}
+  localStorage.setItem(BK,Date.now());render();
 }
-function textIn(title,hint,apply){
-  var ta=h('textarea');var ov;
-  ov=sheet(title,[h('div',{cls:'note'},hint),ta,h('button',{cls:'b on',on:{click:function(){if(apply(ta.value))ov.remove()}}},'적용')]);
+function textIn(){
+  const ta=h('textarea');let ov;
+  ov=sheet('기록 복원',[h('div',{cls:'note'},'백업한 기록 텍스트를 붙여넣으세요. 현재 기록은 교체돼요.'),ta,h('button',{cls:'b on',on:{click:function(){
+    const d=clean(dec(ta.value));if(!d){alert('기록 텍스트가 아니에요. 처음부터 끝까지 그대로 붙여넣었는지 확인해 주세요.');return}
+    if(!confirm('시험 '+Object.keys(d.exams).length+'개의 기록으로 바꿀까요?\n현재 기록은 사라져요.'))return;
+    save(d);ov.remove();render()}}},'적용')]);
 }
-
-function menu(){
-  var ov;function go(f){return function(){ov.remove();f()}}
+document.getElementById('bMenu').onclick=function(){
+  let ov;const go=function(f){return function(){ov.remove();f()}};
   ov=sheet('메뉴',[
-    h('button',{cls:'b',on:{click:go(function(){textOut('목록 내보내기',T.enc('CBTLIST1:',L))})}},'목록 내보내기 (대분류·링크)'),
-    h('button',{cls:'b',on:{click:go(function(){textIn('목록 가져오기','내보낸 목록 텍스트를 붙여넣으세요. 현재 목록은 교체돼요.',function(v){
-      var d=cleanList(T.dec('CBTLIST1:',v));if(!d){alert('목록 텍스트가 아니에요. 처음부터 끝까지 그대로 붙여넣었는지 확인해 주세요.');return false}
-      var n=d.g.reduce(function(s,g){return s+g.l.length},0);
-      if(!confirm('대분류 '+d.g.length+'개, 링크 '+n+'개로 바꿀까요?\n현재 목록은 사라져요.'))return false;
-      L=d;saveList();return true})})}},'목록 가져오기'),
-    h('button',{cls:'b',on:{click:go(function(){textOut('기록 백업',T.enc('CBTREC1:',T.load()),function(){localStorage.setItem(BK,Date.now());render()})})}},'기록 백업 (응시·오답)'),
-    h('button',{cls:'b',on:{click:go(function(){textIn('기록 복원','백업한 기록 텍스트를 붙여넣으세요. 현재 기록은 교체돼요.',function(v){
-      var d=T.cleanRecords(T.dec('CBTREC1:',v));if(!d){alert('기록 텍스트가 아니에요. 처음부터 끝까지 그대로 붙여넣었는지 확인해 주세요.');return false}
-      if(!confirm('시험 '+Object.keys(d.exams).length+'개의 기록으로 바꿀까요?\n현재 기록은 사라져요.'))return false;
-      T.save(d);render();return true})})}},'기록 복원'),
+    h('button',{cls:'b',on:{click:go(function(){textOut(enc(load()))})}},'기록 백업 (응시·오답)'),
+    h('button',{cls:'b',on:{click:go(textIn)}},'기록 복원'),
     h('button',{cls:'b red',on:{click:go(function(){
-      var v=prompt('모든 시험의 응시·오답 기록이 지워져요.\n링크 목록은 남아요.\n계속하려면 "초기화"를 입력하세요.');
-      if(v&&v.trim()==='초기화'){T.resetAll();render()}else if(v!=null)alert('입력이 달라서 취소했어요.')})}},'전체 기록 초기화')
-  ]);
-}
-
-document.getElementById('bEdit').onclick=function(){edit=!edit;render()};
-document.getElementById('bMenu').onclick=menu;
+      const v=prompt('모든 시험의 응시·오답 기록이 지워져요.\n계속하려면 "초기화"를 입력하세요.');
+      if(v&&v.trim()==='초기화'){save({exams:{}});render()}else if(v!=null)alert('입력이 달라서 취소했어요.')})}},'전체 기록 초기화')]);
+};
 window.addEventListener('pageshow',render);
 render();
 </script>
